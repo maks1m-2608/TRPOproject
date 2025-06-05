@@ -108,7 +108,7 @@ private:
     // Вспомогательная функция для поиска
     Element* FindInMap(const std::string& key, Element* node) const;
     // Вспомогательная функция для удаления
-    void EraseElem(std::string key, Element*& node);
+    void EraseElem(const std::string& key, Element*& node);
     // Поиск максимального элемента в поддереве
     Element* FindMax(Element* node);
     // Вспомогательная функция для очистки

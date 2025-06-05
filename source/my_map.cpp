@@ -202,7 +202,7 @@ Element* Map::FindMax(Element* node) {
     return max_number;
 }
 
-void Map::EraseElem(std::string key, Element*& node) {
+void Map::EraseElem(const std::string& key, Element*& node) {
     if (node == nullptr) {
         std::cout << "Удаляемый элемент не найден \n";
         return;
