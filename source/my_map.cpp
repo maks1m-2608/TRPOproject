@@ -107,7 +107,7 @@ bool Map::ConstIterator::operator!=(const ConstIterator& other) const {
 
 // Реализация методов класса Map
 
-Map::Map() : root_(nullptr), size_(0), check_save_(true) { }
+Map::Map() : root_(nullptr), size_(0), check_save_(true) {}
 
 bool Map::Empty() const {
     return size_ == 0;
@@ -204,7 +204,7 @@ Element* Map::FindMax(Element* node) {
 
 void Map::EraseElem(const std::string& key, Element*& node) {
     if (node == nullptr) {
-        std::cout << "Удаляемый элемент не найден\n";
+        std::cout << "Удаляемый элемент не найден \n";
         return;
     }
     if (node->key == key) {
@@ -231,7 +231,7 @@ void Map::EraseElem(const std::string& key, Element*& node) {
             }
             else if (node->parent->key > node->key) {
                 node->parent->left_son = node->right_son;
-                node->right_son->parent = erase_elem->parent;
+                node->parent = erase_elem->parent;
             }
             else {
                 node->parent->right_son = node->right_son;
