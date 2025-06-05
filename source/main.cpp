@@ -30,7 +30,7 @@ void Tests() {
         mp.Insert({ "222", "111" });
         cout << "Данные до изменения:" << endl;
         mp.OutMapData(cout, false);
-        cout << "Изменение значения элемента с ключом - [111], было - 111, стало - 999: " << endl;
+        cout << "Изменение значения элемента с ключом - [111], было - 111, стало - 999:" << endl;
         cout << "Данные после изменения:" << endl;
         mp["111"] = "999";
         mp.OutMapData(cout, false);
@@ -108,10 +108,13 @@ void Tests() {
 
 int main() {
     setlocale(LC_ALL, "rus");
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
+
     Tests();
     system("pause");
 
     Map my_map;
-    Interface interface(my_map);
-    interface.Realization();
+    Interface inter(my_map);
+    inter.Realization();
 }

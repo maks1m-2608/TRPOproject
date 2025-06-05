@@ -1,20 +1,19 @@
 #include "interface.h"
 
-#include <iostream>         //      / 
-#include <conio.h>          //    _getch()
-#include <filesystem>       //     
-#include <fstream>          //    
-#include <regex>            //     
-#include <Windows.h>        //     
+#include <iostream>         // для работы с потоками ввода / вывода
+#include <conio.h>          // для работы с _getch()
+#include <filesystem>       // для работы с файловой системой
+#include <fstream>          // для работы с файлами
+#include <regex>            // для работы с регулярными выражениями
 
 Interface::Interface(Map& my_map) : my_map_(my_map) {}
 
 int Interface::NumberSelection(int a, int b, int c) {
-    int num(0); //    
+    int num(0); // для хранения кода символа
     while (1)
     {
         num = _getch();
-        //      /  
+        // выбор нажатой клавиши из диапазона / доп клавиши
         if (num >= a && num <= b || num == c)
         {
             break;
@@ -24,12 +23,12 @@ int Interface::NumberSelection(int a, int b, int c) {
 }
 
 void Interface::Realization() {
-    //   
+    // подключение русскоязычной раскладки
     setlocale(LC_ALL, "rus");
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
 
-    //  
+    // создание папок
     using std::filesystem::path;
     std::error_code err;
     path input_folder = path("Input");
@@ -41,11 +40,11 @@ void Interface::Realization() {
 
 void Interface::StartMenu() {
     system("cls");
-    std::cout << "      :     \n\n"
-        << "         \n"
-        << ",   ,      \"Input\" \n"
-        << "        \"Output\" \n\n"
-        << "      . \n\n";
+    std::cout << "     МЕНЮ ПРОГРАММЫ:     \n\n"
+        << "Эта программа моделирует работу словаря с помощью бинарного дерева \n"
+        << "Файлы, содержащие входные данные, должны быть расположены в папке \"Input\" \n"
+        << "Файлы с выходными данными будут расположены в папке \"Output\" \n\n"
+        << "Папки автоматически создаются в текущей директории программы. \n\n";
 
     system("pause");
     WorkMenu();
@@ -53,20 +52,20 @@ void Interface::StartMenu() {
 
 void Interface::WorkMenu()
 {
-    bool stop = false;      //    
+    bool stop = false;      // флаг для работы цикла
     while (stop == false) {
         system("cls");
-        int key,             //    
-            save;            //    
-        std::string time;    //      
+        int key,             // для хранения кода символа
+            save;            // для хранения кода символа
+        std::string time;    // для хранения текущего времени и даты
 
-        std::cout << "  ,   : \n"
-            << "1   -     \n"
-            << "2   -     \n"
-            << "3   -    \n"
-            << "4   -       \n"
-            << "5   -      \n"
-            << "esc -   \n";
+        std::cout << "Выберите дальнейшие действия, нажав соответствующую клавишу: \n"
+            << "1   - добавить данные в словарь \n"
+            << "2   - удалить данные из словаря \n"
+            << "3   - узнать размер словаря \n"
+            << "4   - вывести текущие данные словаря в консоль \n"
+            << "5   - сохранить данные словаря в файл \n"
+            << "esc - закрыть программу \n";
 
         key = NumberSelection('1', '5', 27);
 
@@ -78,7 +77,7 @@ void Interface::WorkMenu()
         case '2':
             system("cls");
             if (my_map_.Empty()) {
-                std::cout << " ,    !\n\n";
+                std::cout << "Словарь пуст, нет данных для удаления!\n\n";
                 system("pause");
             }
             else {
@@ -87,16 +86,16 @@ void Interface::WorkMenu()
             break;
         case '3':
             system("cls");
-            std::cout << "   - " << my_map_.Size() << " \n\n";
+            std::cout << "Текущий размер словаря - " << my_map_.Size() << " элементов\n\n";
             system("pause");
             break;
         case '4':
             system("cls");
             if (my_map_.Empty()) {
-                std::cout << " ! \n\n";
+                std::cout << "Словарь пуст! \n\n";
             }
             else {
-                std::cout << "    - <key> <value>\n\n";
+                std::cout << "Данные выведены в формате - <key> <value>\n\n";
                 my_map_.OutMapData(std::cout, false);
             }
             std::cout << std::endl;
@@ -105,7 +104,7 @@ void Interface::WorkMenu()
         case '5':
             system("cls");
             if (my_map_.Empty()) {
-                std::cout << " ! \n\n";
+                std::cout << "Словарь пуст! \n\n";
             }
             else {
                 SaveInFile();
@@ -115,9 +114,9 @@ void Interface::WorkMenu()
         case 27:
             if (my_map_.CheckSaveData() == false && my_map_.Empty() != true) {
                 system("cls");
-                std::cout << "   ,    ?\n"
-                    << "1   -  \n"
-                    << "2   -  -        \n";
+                std::cout << "Вы не сохранили данные, сохранить данные в файл?\n"
+                    << "1   - да \n"
+                    << "2   - нет - в этом случае все данные будут утеряны \n";
                 save = NumberSelection('1', '2');
                 switch (save) {
                 case '1':
@@ -134,15 +133,15 @@ void Interface::WorkMenu()
 }
 
 void Interface::AddMenu() {
-    int key;            //    
-    bool stop = false;  //    
+    int key;            // для хранения кода символа
+    bool stop = false;  // флаг для работы цикла
 
     while (stop == false) {
         system("cls");
-        std::cout << "   ,   : \n"
-            << "1   -   \n"
-            << "2   -   \n"
-            << "esc -     \n";
+        std::cout << "Выберите способ ввода информации, нажав соответствующую клавишу: \n"
+            << "1   - с клавиатуры \n"
+            << "2   - из файла \n"
+            << "esc - вернуться в главное меню \n";
 
         key = NumberSelection('1', '2', 27);
 
@@ -161,21 +160,21 @@ void Interface::AddMenu() {
 }
 
 void Interface::InputKeyboard() {
-    bool stop = false,          //    
+    bool stop = false,          // флаги для работы циклов
         stop_key = false,
         stop_value = false;
-    std::string key;            // 
-    std::string value;          // 
-    std::string str;            // 
+    std::string key;            // ключ
+    std::string value;          // значение
+    std::string str;            // строка
 
     while (stop == false) {
         system("cls");
-        std::cout << "    <key> <value>\n\n";
+        std::cout << "Введите данные в формате <key> <value>\n\n";
         stop_key = false;
         stop_value = false;
 
         while (stop_key == false) {
-            std::cout << "  (  - exit) - ";
+            std::cout << "Введите ключ (для выхода - exit) - ";
             std::getline(std::cin, key);
             if (!key.empty()) {
                 stop_key = true;
@@ -188,7 +187,7 @@ void Interface::InputKeyboard() {
         }
 
         while (stop_value == false) {
-            std::cout << "  (  - exit) - ";
+            std::cout << "Введите значение (для выхода - exit) - ";
             std::getline(std::cin, value);
             if (!value.empty()) {
                 stop_value = true;
@@ -201,16 +200,16 @@ void Interface::InputKeyboard() {
         }
 
         my_map_.Insert({ key, value });
-        std::cout << "\n  : key - " << key << " value - " << value << std::endl;
+        std::cout << "\nданные успешно добавлены: key - " << key << " value - " << value << std::endl;
         system("pause");
     }
 }
 
 void Interface::FindFileForInput() {
     using std::filesystem::path;
-    path cur_path = std::filesystem::current_path();     //    
-    path input_path;    //  
-    bool stop = false;  //    
+    path cur_path = std::filesystem::current_path();     // путь к текущей директории
+    path input_path;    // входной путь
+    bool stop = false;  // флаг для работы цикла
     std::string str;
 
     while (stop == false) {
@@ -219,22 +218,22 @@ void Interface::FindFileForInput() {
         bool check_cout = false;
         input_path = cur_path / path("Input");
 
-        //   
+        // перебор всей директории
         for (auto it : std::filesystem::directory_iterator(input_path)) {
             if (check_cout == false) {
-                std::cout << "    Input: " << std::endl;
+                std::cout << "Список файлов в папке Input: " << std::endl;
                 check_cout = true;
             }
             auto status = std::filesystem::status(it);
             path file_path(it);
 
-            //  it -   -    
+            // если it - это файл - вывести его в консоль
             if (status.type() == std::filesystem::file_type::regular) {
                 std::cout << file_path.filename().string() << std::endl;
             }
         }
 
-        std::cout << "\n  ,    - exit: \n";
+        std::cout << "\nВведите название файла, для выхода введите - exit: \n";
 
         std::getline(std::cin, str);
 
@@ -242,7 +241,7 @@ void Interface::FindFileForInput() {
             return;
         }
         if (str.empty()) {
-            std::cout << "   ,   \n\n";
+            std::cout << "Вы ничего не ввели, попробуйте еще раз\n\n";
             system("pause");
             continue;
         }
@@ -250,13 +249,13 @@ void Interface::FindFileForInput() {
         input_path = input_path / path(str);
 
         if (std::filesystem::exists(input_path) == false) {
-            std::cout << "   ,    \n\n";
+            std::cout << "Данный файл не найден, попробуйте еще раз \n\n";
             system("pause");
             continue;
         }
         else {
-            std::cout << "   " << input_path.filename().string() << std::endl
-                << "  : " << input_path.string() << std::endl << std::endl;
+            std::cout << "Вы открыли файл " << input_path.filename().string() << std::endl
+                << "Путь к файлу: " << input_path.string() << std::endl << std::endl;
             stop = true;
             system("pause");
             InputFromFile(input_path.string());
@@ -276,7 +275,7 @@ void Interface::InputFromFile(std::string name) {
     int pos1 = 0, 
         pos2 = 0;
 
-    std::cout << "      <key> <value>:\n\n";
+    std::cout << "В словарь добавлены данные в формате <key> <value>:\n\n";
 
     while (!file.eof()) {
         key.clear();
@@ -305,22 +304,22 @@ void Interface::InputFromFile(std::string name) {
 }
 
 void Interface::DeleteMenu() {
-    int key;            //    
-    bool stop = false;  //    
+    int key;            // для хранения кода символа
+    bool stop = false;  // флаг для работы цикла
 
     while (stop == false) {
         system("cls");
-        std::cout << " ,   : \n"
-            << "1   -     \n"
-            << "2   -   \n"
-            << "esc -     \n";
+        std::cout << "Выберите информацию, которую нужно удалить: \n"
+            << "1   - удалить элемент из словаря \n"
+            << "2   - очистить словарь \n"
+            << "esc - вернуться в главное меню \n";
 
         key = NumberSelection('1', '2', 27);
 
         switch (key) {
         case '1':
             if (my_map_.Empty()) {
-                std::cout << " ,    !\n\n";
+                std::cout << "Словарь пуст, нет данных для удаления!\n\n";
                 system("pause");
             }
             else {
@@ -329,7 +328,7 @@ void Interface::DeleteMenu() {
             break;
         case '2':
             if (my_map_.Empty()) {
-                std::cout << " ,    !\n\n";
+                std::cout << "Словарь пуст, нет данных для удаления!\n\n";
                 system("pause");
             }
             else {
@@ -348,9 +347,9 @@ void Interface::DeleteElem() {
     std::string key;
     while (stop == false) {
         system("cls");
-        std::cout << "     <key> <value>\n\n";
+        std::cout << "Текущие элементы словаря в формате <key> <value>\n\n";
         my_map_.OutMapData(std::cout, false);
-        std::cout << "\n  ,    (  - exit): \n";
+        std::cout << "\nВведите ключ элемента, который нужно удалить (для выхода - exit): \n";
         std::getline(std::cin, key);
         if (key.empty()) {
             continue;
@@ -360,11 +359,11 @@ void Interface::DeleteElem() {
             continue;
         }
         if (my_map_.Find(key) == nullptr) {
-            std::cout << "   !\n";
+            std::cout << "Удаляемый элемент не найден!\n";
         }
         else {
             my_map_.Erase(key);
-            std::cout << "   - " << key << "   \n\n";
+            std::cout << "Элемент с ключом - " << key << " удален из словаря\n\n";
         }
         system("pause");
     }
@@ -373,17 +372,17 @@ void Interface::DeleteElem() {
 void Interface::DeleteAllData() {
     system("cls");
 
-    int key;         //    
-    std::cout << "        ? \n"
-        << "1   - ,    \n"
-        << "esc -     \n";
+    int key;         // для хранения кода символа
+    std::cout << "Вы точно хотите безвозвратно удалить всю информацию из дерева? \n"
+        << "1   - да, удалить все данные \n"
+        << "esc - вернуться в главное меню \n";
 
     key = NumberSelection('1', '1', 27);
 
     switch (key) {
     case '1':
         my_map_.Clear();
-        std::cout << "\n  !\n\n";
+        std::cout << "\nДанные успешно удалены!\n\n";
         system("pause");
         break;
     case 27:
@@ -393,9 +392,9 @@ void Interface::DeleteAllData() {
 }
 
 std::string Interface::FindTime() {
-    std::string date_now;     //    
+    std::string date_now;     // строка для записи данных
 
-    //   
+    // определение текущего времени
     time_t now;
     tm date;
     time(&now);
@@ -428,9 +427,9 @@ void Interface::SaveInFile() {
 
     std::string time = FindTime();
 
-    //     
+    // путь к текущей директории программы
     path cur_path = std::filesystem::current_path();
-    //      
+    // путь к выходному файлу с данными
     cur_path = cur_path / path("Output") / path("result by" + time + ".txt");
 
     std::fstream file;
@@ -438,6 +437,6 @@ void Interface::SaveInFile() {
     my_map_.OutMapData(file, true);
     file.close();
 
-    std::cout << "   : " << cur_path.filename().string() << std::endl
-        << "  : " << cur_path.string() << std::endl << std::endl;
+    std::cout << "Данные сохранены в файл: " << cur_path.filename().string() << std::endl
+        << "Путь к файлу: " << cur_path.string() << std::endl << std::endl;
 }

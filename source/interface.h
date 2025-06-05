@@ -1,7 +1,9 @@
 #pragma once
 
 #include "my_map.h"
+
 #include <string>
+#include <Windows.h> 
 
 class Interface {
 public:
